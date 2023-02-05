@@ -131,11 +131,8 @@
         $("body").css("opacity", 0.5);
       },
       success: (json) => {
-        setTimeout(function(){
-          $("body").css("opacity", 1);
-          $("#preloader").hide();
-
-        });
+        $("body").css("opacity", 1);
+        $("#preloader").hide();
         document.forms[0].reset();
         const prediction = json.prediction;
         const results = json.results;
