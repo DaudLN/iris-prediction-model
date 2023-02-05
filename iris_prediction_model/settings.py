@@ -70,7 +70,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "iris_prediction_model.wsgi.application"
 
-
+ALLOWED_HOSTS = ['namayalairispred.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['https://namayalairispred.up.railway.app']
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
