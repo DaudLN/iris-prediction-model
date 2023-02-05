@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <table class="table table-striped table-bordered table-responsible">
+        <thead>
+            <tr>
+                <th>Sepal length</th>
+                <th>Sepal width</th>
+                <th>Petal length</th>
+                <th>Petal width</th>
+                <th>Classification</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in dataset %}
+                <tr>
+                    <td>{{data.sepal_length}}</td>
+                    <td>{{data.sepal_width}}</td>
+                    <td>{{data.petal_length}}</td>
+                    <td>{{data.petal_width}}</td>
+                    <td>{{data.classification}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

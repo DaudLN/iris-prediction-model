@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- End preloader -->
+<!-- Modal -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalId">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLiveLabel">
+          Prediction results
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <article class="inputs">
+          <h5>Inputs</h5>
+          <hr />
+          <p>Sepal legth: <span id="sl"></span></p>
+          <p>Sepal width: <span id="sw"></span></p>
+          <p>Petal legth: <span id="pl"></span></p>
+          <p>Petal width: <span id="pw"></span></p>
+        </article>
+        <article class="prediction">
+          <h5>Classification</h5>
+          <hr />
+          <p id="pred" class="h6 text-success"></p>
+        </article>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <a href="{% url 'results' %}" class="btn btn-primary">
+          View predictions
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Preloader -->
+<div id="preloader" style="display: none">
+  <img src="{% static 'preloader/preloader.gif' %}" alt="Loading..." />
+</div>
+
+<!-- End preloader -->
+<!-- End model result -->
+
+<div class="input-form my-3 col-md-6 col-sm-12 mx-auto">
+  <h1>Iris prediction</h1>
+  <form action="" id="predict-form">
+    {% csrf_token %}
+    <div class="form-group my-3">
+      <label for="sepal_length">Sepal length</label>
+      <input
+        type="number"
+        step="0.1"
+        required
+        name="sepal_length"
+        id="sepal_length"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group my-3">
+      <label for="sepal_width">Sepal width</label>
+      <input
+        type="number"
+        step="0.1"
+        required
+        name="sepal_width"
+        id="sepal_width"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group my-3">
+      <label for="petal_length">Petal length</label>
+      <input
+        type="number"
+        step="0.1"
+        required
+        name="petal_length"
+        id="petal_length"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group my-3">
+      <label for="petal_width">Petal width</label>
+      <input
+        type="number"
+        step="0.1"
+        required
+        name=""
+        id="petal_width"
+        class="form-control"
+      />
+    </div>
+    <input
+      type="submit"
+      name="submit"
+      id="submit"
+      class="btn btn-success my-2"
+      value="Predict"
+      data-bs-toggle="modal"
+      data-bs-target="#staticBackdropLive"
+    />
+  </form>
+</div>
+{% endblock content %} {% block script %}
+<script>
+  $(document).on("submit", "#predict-form", (e) => {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: '{% url "result" %}',
+      data: {
+        sepal_length: $("#sepal_length").val(),
+        sepal_width: $("#sepal_width").val(),
+        petal_length: $("#petal_length").val(),
+        petal_width: $("#petal_width").val(),
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+      },
+      beforeSend: function () {
+        $("#preloader").show();
+        $("body").css("opacity", 0.5);
+      },
+      success: (json) => {
+        setTimeout(function(){
+          $("body").css("opacity", 1);
+          $("#preloader").hide();
+
+        });
+        document.forms[0].reset();
+        const prediction = json.prediction;
+        const results = json.results;
+        $("#sl").html(results.sepal_length);
+        $("#sw").html(results.sepal_width);
+        $("#pl").html(results.petal_length);
+        $("#pw").html(results.petal_width);
+        $("#pred").html(prediction);
+
+        $("#modalId").modal("show");
+
+        console.log(results, results.sepal_length);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  });
+</script>
+{% endblock script %}
