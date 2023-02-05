@@ -8,6 +8,7 @@ joblib = "*"
 django = "*"
 scikit-learn = "*"
 gunicorn = "*"
+whitenoise = "*"
 
 [dev-packages]
 
